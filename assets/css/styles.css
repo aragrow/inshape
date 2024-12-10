@@ -1,0 +1,47 @@
+#inshape_meta_box { /* Assuming your meta box has this ID */
+    font-family: sans-serif;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.1); /* subtle shadow */
+}
+#inshape_meta_box label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+#inshape_meta_box select, #inshape_meta_box input[type="number"]{
+    width: 10%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    box-sizing: border-box; /* Include padding in width */
+    margin-bottom: 15px;
+}
+#inshape_meta_box input[type="number"]::-webkit-inner-spin-button,
+#inshape_meta_box input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+#inshape_meta_box select{
+    width: 50%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    box-sizing: border-box; /* Include padding in width */
+    margin-bottom: 15px;
+}
+
+#inshape_meta_box textarea.custom-textbox{
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-bottom: 15px;
+    background-color: #fff;
+    color: #333;
+    font-family: Arial, sans-serif;
+    transition: border-color 0.3s; /* Smoother transitions */
+}

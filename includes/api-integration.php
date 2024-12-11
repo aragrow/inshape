@@ -1,20 +1,39 @@
 <?php
+/*
+This class is responsible for integrating with the InShape API (likely the Gemini API) to generate fitness plans based on 
+user data. It also includes a method for calling a local Python script that presumably performs image analysis.
+*/
+
+/*
+Purpose: Prevents direct access to the file. The check ensures that the file is only executed within the WordPress environment 
+(not directly accessed via the browser).
+*/
 if (!defined('ABSPATH')) exit;
 
+/*
+This class is responsible for integrating with the InShape API (likely the Gemini API) to generate fitness plans based on user data.
+It also includes a method for calling a local Python script that presumably performs image analysis.
+*/
 class WP_InShape_API_Integration {
 
     public function __construct() {
 
     }
 
+    /* Purpose: Fetches the Gemini API URL from the WordPress options table. This URL is used when making requests to the Gemini API.
+    Returns: The API URL stored in WordPress options. */
     function set_apiuri() {
         return get_option('gemini_api_url');
     }
 
+    /* Purpose: Fetches the API key from the WordPress options table. The API key is needed for authentication when making requests to the Gemini API.
+    Returns: The API key stored in WordPress options. */
     function set_apikey() {
         return get_option('gemini_api_key');
     }
 
+    /* Purpose: Defines the prompt that will be used to guide the API to generate a fitness plan. This prompt instructs the API to generate a fitness plan in a specific format using HTML tags.
+    Returns The prompt string for use in the API request payload. */
     function set_prompt_post() {
         return 
         "Perform the following steps:
@@ -28,6 +47,14 @@ class WP_InShape_API_Integration {
             Exclude the <html>, <head>, or <body> tags in the response.";
     }
 
+    /* Purpose: Sends a request to the Gemini API to generate a fitness plan based on the provided $title and $attributes. The API response is parsed, and an answer is returned. If the request fails, an error is logged, and a WP_Error is displayed.
+    Flow:
+    Retrieves the API URL and key.
+    Builds the request payload with the fitness plan prompt and provided attributes.
+    Makes the request using cURL.
+    Parses the response and extracts the generated fitness plan.
+    Handles errors if the API doesn't respond as expected.
+    Returns: An array with the status and the generated fitness plan text, or a WP_Error in case of failure. */
     function generate_plan_description ( $title, $attributes ) {
 
         error_log("Exec->generate_plan_description()");
@@ -126,6 +153,12 @@ class WP_InShape_API_Integration {
     
     }
 
+    /* Purpose: Sends a GET request to a local Python API (presumably running a Flask server) to analyze an image. The image URI is passed as a query parameter.
+    Flow:
+    Builds the full URL with the image URI.
+    Makes the GET request to the Python API using cURL.
+    Logs the response for debugging.
+    Returns: The parsed JSON response from the Python API. */
     function call_python_script($uri) {
         
         error_log("Exec->call_python_script()");

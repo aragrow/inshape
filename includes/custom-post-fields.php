@@ -1,8 +1,19 @@
 <?php
+/*
+Purpose: Prevents direct access to the file. The check ensures that the file is only executed within the WordPress environment 
+(not directly accessed via the browser).
+*/
 if (!defined('ABSPATH')) exit;
 
+/* The WP_InShape_Register_Post_Fields class registers a custom meta box for the inshape custom post type. It handles the following tasks:
+Adds a meta box for collecting user data related to fitness.
+Displays the form fields in the meta box for the user to fill out.
+Saves the entered data to the post’s metadata when the post is saved. */
 class WP_InShape_Register_Post_Fields{
 
+    /* Purpose: The constructor hooks the following actions:
+    add_meta_boxes: Registers a meta box for the inshape custom post type.
+    save_post: Ensures that the custom fields are saved when the post is saved. */
     public function __construct() {
         
         // Register Inhape Post Type
@@ -11,6 +22,14 @@ class WP_InShape_Register_Post_Fields{
     
     }
 
+    /* Purpose: Registers a meta box called "InShape Fields" that is added to posts of type inshape.
+    Parameters:
+    ID: The unique ID of the meta box (inshape_meta_box).
+    Title: The title of the meta box (InShape Fields).
+    Callback: The function that will render the meta box content (render_inshape_meta_box).
+    Post Type: The post type for which the meta box is shown (inshape).
+    Context: The location of the meta box (normal for the main content area).
+    Priority: The display priority of the meta box (high for top priority). */
     public function add_inshape_meta_box() {
         add_meta_box(
             'inshape_meta_box', //Unique ID
@@ -22,7 +41,11 @@ class WP_InShape_Register_Post_Fields{
         );
     }
 
-    //Callback function to display the meta box
+    /* Purpose: Renders the fields in the meta box for the user to fill in the relevant information about their fitness profile.
+    Functionality:
+    It displays input fields.
+    Each field retrieves and displays existing values (if any) from the post's metadata.
+    It adds a nonce field to secure the form submission. */
     public function render_inshape_meta_box( $post ) {
 
         // Check post type
@@ -101,7 +124,12 @@ class WP_InShape_Register_Post_Fields{
 
     }
 
-    //Save the meta box data
+    /* Purpose: This method saves the custom field data entered in the meta box to the post’s metadata.
+    Functionality:
+    Security: The nonce field ensures that the request to save the data is valid.
+    Permissions Check: The method verifies that the current user has permission to edit the post.
+    Sanitization: The method sanitizes the data before saving it to the database to ensure security and data integrity.
+    Saving Data: Each custom field is saved using update_post_meta() with the sanitized input. */
     public function save_inshape_meta_box( $post_id ) {
 
         // Check post type
@@ -154,6 +182,7 @@ class WP_InShape_Register_Post_Fields{
 
     }
     
-
 }
+
+/* Purpose: This line instantiates the WP_InShape_Register_Post_Fields class. */
 new WP_InShape_Register_Post_Fields();

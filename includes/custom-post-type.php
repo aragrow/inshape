@@ -1,8 +1,22 @@
 <?php
+/* The purpose of this class is to:
+
+Register a custom post type (inshape).
+Register a custom taxonomy (inshape-category), allowing posts to be categorized under different categories related to "InShape".
+*/
+
+/*
+Purpose: Prevents direct access to the file. The check ensures that the file is only executed within the WordPress environment 
+(not directly accessed via the browser).
+*/
 if (!defined('ABSPATH')) exit;
 
+/* Purpose: The constructor hooks the following actions:
+init: Registers both the custom post type (inshape) and the custom taxonomy (inshape-category) when WordPress initializes. */
 class WP_InShape_Register_Post_Type{
 
+    /* Purpose: The constructor hooks the following actions:
+    init: Registers both the custom post type (inshape) and the custom taxonomy (inshape-category) when WordPress initializes. */
     public function __construct() {
         
         // Register Custom Post Type
@@ -10,7 +24,16 @@ class WP_InShape_Register_Post_Type{
         add_action( 'init', [$this, 'register_inshape_category_taxonomy'], 0 );
     
     }
-   
+    
+    /* Purpose: Registers a custom post type (inshape) with specific configurations.
+    Parameters:
+    labels: Defines the labels for various actions such as adding a new item, editing an item, etc.
+    public: Set to true, making the post type publicly accessible.
+    show_in_rest: Set to true, enabling the custom post type to be accessible via the REST API (useful for the block editor).
+    supports: Specifies the features that the post type supports. For inshape, it includes the title, editor, thumbnail, and custom fields (inshape-fields).
+    taxonomies: Associates the custom taxonomy inshape-category with the inshape post type.
+    has_archive: Enables an archive page for this post type.
+    rewrite: Sets the URL slug for the custom post type (inshape). */
     function register_inshape_post_type() {
         
         register_post_type('inshape', [
@@ -32,6 +55,16 @@ class WP_InShape_Register_Post_Type{
         ]);
 
     }
+
+    /* Purpose: Registers the custom taxonomy (inshape-category) for categorizing inshape posts.
+    Parameters:
+    labels: Defines the labels for the taxonomy, including options to add, edit, and view categories.
+    hierarchical: Set to true to create a hierarchy of categories (like WordPress default categories).
+    public: Makes the taxonomy publicly visible.
+    show_ui: Enables the taxonomy's UI in the admin interface.
+    show_in_nav_menus: Allows the taxonomy to be shown in navigation menus.
+    show_in_rest: Exposes the taxonomy to the REST API for use in the block editor.
+    rewrite: Sets the URL slug for the taxonomy (inshape-category). */
 
     function register_inshape_category_taxonomy() {
         $labels = array(
@@ -72,4 +105,6 @@ class WP_InShape_Register_Post_Type{
     }
 
 }
+
+/* Purpose: This line instantiates the WP_InShape_Register_Post_Type class. */
 new WP_InShape_Register_Post_Type();

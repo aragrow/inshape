@@ -24,6 +24,21 @@ class WP_InShape_Register_Post_Fields{
 
     //Callback function to display the meta box
     public function render_inshape_meta_box( $post ) {
+
+        // Check post type
+        if ( get_post_type( $post->ID ) != 'inshape' ) {
+            return;
+        }
+
+        // Check if the post is autosave or revision (saved by the system)
+        if ( defined('DOING_AUTOSAVE') && DOING_AUTOSAVE ) {
+            return;
+        }
+
+        // Check if the post is a revision (saved by the system)
+        if ( wp_is_post_revision( $post->ID  ) ) {
+            return;
+        }
         // Add nonce field for security
         wp_nonce_field( 'inshape_meta_box', 'inshape_meta_box_nonce' );
     
@@ -36,9 +51,14 @@ class WP_InShape_Register_Post_Fields{
         $waist_value = get_post_meta( $post->ID, 'inshape_waist_field', true );
         $activity_value = get_post_meta( $post->ID, 'inshape_activity_field', true );
         $activity_desc = get_post_meta( $post->ID, 'inshape_activity_description_field', true );
+        $goal_desc = get_post_meta( $post->ID, 'inshape_goal_description_field', true );
     
         ?>
         <div id="inshape_meta_box">  <!-- Added div with ID -->
+            
+            <label for="inshape_goal_description_field">Goal Description:<span>(Describe your goal in details)</span></label><br>
+            <textarea class="custom-textbox" id="inshape_goal_description_field" name="inshape_goal_description_field" required><?php echo esc_attr( $goal_desc ); ?></textarea>
+
             <label for="inshape_gender_field">Gender:</label><br>
             <select id="inshape_gender_field" name="inshape_gender_field" required>
                 <option value="" selected>Prefer not to say</option>
@@ -74,9 +94,7 @@ class WP_InShape_Register_Post_Fields{
             </select>
 
             <label for="inshape_activity_description_field">Physical Activity Description:<span>(Describe your physical activity in details)</span></label><br>
-            <textarea class="custom-textbox" id="inshape_activity_description_field" name="inshape_activity_description_field" value="<?php echo esc_attr( $activity_desc ); ?>" required></textarea>
-
-           
+            <textarea class="custom-textbox" id="inshape_activity_description_field" name="inshape_activity_description_field" required><?php echo esc_attr( $activity_desc ); ?></textarea>
 
         </div>
         <?php
@@ -86,6 +104,13 @@ class WP_InShape_Register_Post_Fields{
     //Save the meta box data
     public function save_inshape_meta_box( $post_id ) {
 
+        // Check post type
+        if ( get_post_type( $post_id ) != 'inshape' ) {
+            return;
+        }
+
+        error_log("Exec->save_inshape_meta_box()");
+
         // Check nonce
         if ( ! isset( $_POST['inshape_meta_box_nonce'] ) || ! wp_verify_nonce( $_POST['inshape_meta_box_nonce'], 'inshape_meta_box' ) ) {
             return;
@@ -93,11 +118,6 @@ class WP_InShape_Register_Post_Fields{
 
         // Check permissions
         if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
-            return;
-        }
-
-        // Check post type
-        if ( get_post_type( $post_id ) != 'inshape' ) {
             return;
         }
 
@@ -126,8 +146,12 @@ class WP_InShape_Register_Post_Fields{
             update_post_meta( $post_id, 'inshape_waist_field', sanitize_textarea_field( $_POST['inshape_waist_field'] ) );
         }
         if ( isset( $_POST['inshape_activity_description_field'] ) ) {
-            update_post_meta( $post_id, 'inshape_activity_description_field', sanitize_textarea_field( $_POST['inshape_activity_description_field'] ) );
+            update_post_meta( $post_id, 'inshape_activity_description_field', sanitize_text_field( $_POST['inshape_activity_description_field'] ) );
         }
+        if ( isset( $_POST['inshape_goal_description_field'] ) ) {
+            update_post_meta( $post_id, 'inshape_goal_description_field', sanitize_text_field( $_POST['inshape_goal_description_field'] ) );
+        }
+
     }
     
 

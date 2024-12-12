@@ -66,6 +66,7 @@ class WP_InShape_Register_Post_Fields{
         wp_nonce_field( 'inshape_meta_box', 'inshape_meta_box_nonce' );
     
         // Get existing values for the fields
+        $ethnicity_value = get_post_meta( $post->ID, 'inshape_ethnicity_field', true );
         $gender_value = get_post_meta( $post->ID, 'inshape_gender_field', true );
         $age_value = get_post_meta( $post->ID, 'inshape_age_field', true );
         $weight_value = get_post_meta( $post->ID, 'inshape_weight_field', true );
@@ -81,6 +82,41 @@ class WP_InShape_Register_Post_Fields{
             
             <label for="inshape_goal_description_field">Goal Description:<span>(Describe your goal in details)</span></label><br>
             <textarea class="custom-textbox" id="inshape_goal_description_field" name="inshape_goal_description_field" required><?php echo esc_attr( $goal_desc ); ?></textarea>
+
+            <label for="inshape_ethnicity_field">Ethnicity:<span>(Multiple selection hold cntrl/cmd key and click on option)</span></label><br>
+            <select id="inshape_ethnicity_field" name="inshape_ethnicity_field">
+                <option value="Do not know" selected >Do not know</option>
+                <optgroup label="Asian">
+                    <option value="Filipino American" <?php selected( $ethnicity_value, 'Filipino American', true ); ?>>Filipino American</option>
+                    <option value="Chinese American" <?php selected( $ethnicity_value, 'Chinese American', true ); ?>>Chinese American</option>
+                    <option value="Japanese American" <?php selected( $ethnicity_value, 'Japanese American', true ); ?>>Japanese American</option>
+                    <option value="Korean American" <?php selected( $ethnicity_value, 'Korean American', true ); ?>>Korean American</option>
+                    <option value="Vietnamese American <?php selected( $ethnicity_value, 'Vietnamese American', true ); ?>">Vietnamese American</option>
+                    <option value="Pacific Islander American <?php selected( $ethnicity_value, 'Pacific Islander American', true ); ?>">Pacific Islander American</option>  
+                </optgroup>
+                <optgroup label="Latin American/Hispanic/Caribbean">
+                    <option value="Mexican American" <?php selected( $ethnicity_value, 'Mexican American', true ); ?>>Mexican American</option>
+                    <option value="Puerto Rican American" <?php selected( $ethnicity_value, 'Puerto Rican American', true ); ?>>Puerto Rican American</option>
+                    <option value="Cuban American" <?php selected( $ethnicity_value, 'Cuban American', true ); ?>>Cuban American</option>
+                    <option value="Dominican American" <?php selected( $ethnicity_value, 'Dominican American"', true ); ?>>Dominican American</option>
+                    <option value="Central American" <?php selected( $ethnicity_value, 'Central American', true ); ?>>Central American</option>  
+                    <option value="South American" <?php selected( $ethnicity_value, 'South American', true ); ?>>South American</option>  
+                    <option value="Caribbean American" <?php selected( $ethnicity_value, 'Caribbean American', true ); ?>>Caribbean American</option> 
+                </optgroup>
+                <optgroup label="European">
+                    <option value="European American" <?php selected( $ethnicity_value, 'European American', true ); ?>>European American</option>  
+                </optgroup>
+                <optgroup label="Middle Eastern">
+                    <option value="Middle Eastern American" <?php selected( $ethnicity_value, 'Middle Eastern American', true ); ?>>Middle Eastern American</option>  
+                </optgroup>
+                <optgroup label="North American">
+                    <option value="White American" <?php selected( $ethnicity_value, 'White American', true ); ?>>White American</option>
+                    <option value="African American" <?php selected( $ethnicity_value, 'African American', true ); ?>>African American</option>  
+                </optgroup>
+                <optgroup label="Other">
+                    <option value="Other">Other</option>
+                </optgroup>
+            </select>
 
             <label for="inshape_gender_field">Gender:</label><br>
             <select id="inshape_gender_field" name="inshape_gender_field" required>
@@ -155,6 +191,9 @@ class WP_InShape_Register_Post_Fields{
         }
 
         // Sanitize and save the data
+        if ( isset( $_POST['inshape_ethnicity_field'] ) ) {
+            update_post_meta( $post_id, 'inshape_ethnicity_field', sanitize_text_field( $_POST['inshape_ethnicity_field'] ) );
+        }
         if ( isset( $_POST['inshape_gender_field'] ) ) {
             update_post_meta( $post_id, 'inshape_gender_field', sanitize_text_field( $_POST['inshape_gender_field'] ) );
         }
@@ -172,6 +211,9 @@ class WP_InShape_Register_Post_Fields{
         }
         if ( isset( $_POST['inshape_waist_field'] ) ) {
             update_post_meta( $post_id, 'inshape_waist_field', sanitize_textarea_field( $_POST['inshape_waist_field'] ) );
+        }
+        if ( isset( $_POST['inshape_activity_field'] ) ) {
+            update_post_meta( $post_id, 'inshape_activity_field', sanitize_textarea_field( $_POST['inshape_activity_field'] ) );
         }
         if ( isset( $_POST['inshape_activity_description_field'] ) ) {
             update_post_meta( $post_id, 'inshape_activity_description_field', sanitize_text_field( $_POST['inshape_activity_description_field'] ) );

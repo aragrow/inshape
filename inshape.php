@@ -12,11 +12,19 @@ Author URI: https://aragrow.me
 // Exit if accessed directly
 if (!defined('ABSPATH')) exit;
 
+// Define a constant for the plugin's base directory. This makes the code more readable and easier to maintain.
+defined( 'INSHAPE_BASE_DIR' ) or define( 'INSHAPE_BASE_DIR', plugin_dir_path( __FILE__ ) );
+
+
+// Define a constant for the data directory. This separates the path logic from its use, and makes it more maintainable.
+defined( 'INSHAPE_DATA_DIR' ) or define( 'INSHAPE_DATA_DIR', INSHAPE_BASE_DIR . 'assets/sample-data/' );
+
 require_once plugin_dir_path(__FILE__) . 'includes/api-integration.php';
 require_once plugin_dir_path(__FILE__) . 'includes/custom-post-type.php';
 require_once plugin_dir_path(__FILE__) . 'includes/custom-post-fields.php';
 require_once plugin_dir_path(__FILE__) . 'includes/save-post.php';
 require_once plugin_dir_path(__FILE__) . 'includes/admin-ui.php';
+require_once plugin_dir_path(__FILE__) . 'includes/sample-data.php';
 
 /* The function enqueue_inshape_meta_box_styles() is used to enqueue a custom CSS file (styles.css) and make an 
 AJAX URL available to your JavaScript code. This is useful when you need to apply custom styling to the InShape 

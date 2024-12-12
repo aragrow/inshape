@@ -17,7 +17,8 @@ Purpose: Defines the main class for the plugin’s admin interface. This class h
 settings registration, and the display of the settings page.
 */
 class WP_InShape_Admin_UI {
-
+    
+    public $data_path;
     /*
     Purpose: The constructor initializes the plugin by hooking two functions into WordPress actions:
     admin_menu: Adds a menu item to the WordPress admin menu.
@@ -97,7 +98,103 @@ class WP_InShape_Admin_UI {
             </form>
 
         </div>
+
+        <h3>Generate 200 random import records with clients name and data points.</h3>
+        <form>
+            <button type="button" id="generate-csv-button" class="button button-primary">Generate CSV File</button>
+        </form>
+        <?php echo $this->display_files_in_table() ?>
+        <script>
+            // enqueue this script in your plugin
+            jQuery(document).ready(function($) {
+                $('#generate-csv-button').click(function() {
+                    event.preventDefault(); // Prevent default form submission
+                    $.ajax({
+                        url: ajaxurl, // WordPress AJAX URL
+                        type: 'POST',
+                        data: {
+                            action: 'inshape_generate_csv', //Your AJAX action
+                            nonce: '<?php echo wp_create_nonce( 'inshape_generate_csv_nonce_76543' ); ?>', //Security nonce
+                        },
+                        success: function(response) {
+                            // Handle the successful response from the server.
+                            if (response.success) {
+                                alert(JSON.stringify(response.data));
+                                // Optional: provide a link to download the file
+                                // ...
+                            } else {
+                                alert('Error generating CSV file: ' + response.data);
+                            }
+                        },
+                        error: function(error) {
+                            // Handle errors during the AJAX call.
+                            console.error('AJAX error:', error);
+                            alert('An error occurred while generating the file.\n'+error);
+                        },
+                    });
+                });
+
+                $('.import-csv-button').click(function() {
+                    event.preventDefault(); // Prevent default form submission
+                    file =$(this).data('filename')
+                    $.ajax({
+                            url: ajaxurl, // WordPress AJAX URL
+                            type: 'POST',
+                            data: {
+                                action: 'inshape_import_csv', //Your AJAX action
+                                nonce: '<?php echo wp_create_nonce( 'inshape_import_csv_nonce_28017' ); ?>', //Security nonce
+                                csv_file: file,
+                            },
+                            success: function(response) {
+                                // Handle the successful response from the server.
+                                if (response.success) {
+                                    alert(JSON.stringify(response.data));
+                                    // Optional: provide a link to download the file
+                                    // ...
+                                } else {
+                                    alert('Error importing CSV file: ' + response.data);
+                                }
+                            },
+                            error: function(error) {
+                                // Handle errors during the AJAX call.
+                                console.error('AJAX error:', error);
+                                alert('An error occurred while importing the file.\n'+error);
+                            },
+                        }); 
+                });
+            });
+            
+        </script>
     <?php }
+
+    function display_files_in_table() {
+
+        $files = scandir( INSHAPE_DATA_DIR );
+        if ( ! $files ) {
+            return '<p>Error: Could not read directory contents.</p>';
+        }
+
+        $table_html = '<br/><table class="wp-list-table widefat fixed striped">';
+        $table_html .= '<thead><tr><th>Filename</th><th>Import</th></tr></thead>';
+        $table_html .= '<tbody>';
+
+        foreach ( $files as $file ) {
+            if ( $file === '.' || $file === '..' ) {
+                continue; //Skip current and parent directory entries
+            }
+
+            $filepath = esc_url( $this->data_path); //sanitize before using in href
+
+            $table_html .= '<tr>';
+            $table_html .= '<td>' . esc_html( $file ) . '</td>'; //Sanitize before displaying
+            $table_html .= '<td><button type="button" class="button import-csv-button" data-filename="'. INSHAPE_DATA_DIR . esc_attr( $file ) . '">Import Data File</button></td>';
+            $table_html .= '</tr>';
+        }
+
+        $table_html .= '</tbody></table>';
+
+        return $table_html;
+    }
 
 }
 

@@ -44,18 +44,19 @@ class WP_InShape_API_Integration {
             Use <h1> for the product title or headline.
             Use <p> for detailed paragraphs describing the item.
             Use <ul> and <li> for listing key features or benefits.
-            Exclude the <html>, <head>, or <body> tags in the response.";
+            Exclude the <html>, <head>, or <body> tags in the response.
+            List all the provided data points";
     }
 
-    /* Purpose: Sends a request to the Gemini API to generate a fitness plan based on the provided $title and $attributes. The API response is parsed, and an answer is returned. If the request fails, an error is logged, and a WP_Error is displayed.
+    /* Purpose: Sends a request to the Gemini API to generate a fitness plan based on the provided $title and $datapoints. The API response is parsed, and an answer is returned. If the request fails, an error is logged, and a WP_Error is displayed.
     Flow:
     Retrieves the API URL and key.
-    Builds the request payload with the fitness plan prompt and provided attributes.
+    Builds the request payload with the fitness plan prompt and provided data points.
     Makes the request using cURL.
     Parses the response and extracts the generated fitness plan.
     Handles errors if the API doesn't respond as expected.
     Returns: An array with the status and the generated fitness plan text, or a WP_Error in case of failure. */
-    function generate_plan_description ( $title, $attributes ) {
+    function generate_plan_description ( $title, $datapoints ) {
 
         error_log("Exec->generate_plan_description()");
 
@@ -84,7 +85,7 @@ class WP_InShape_API_Integration {
                         [
                             'text' => "$prompt,
                             'title' => $title,
-                            'inputs: $attributes"
+                            'data points: $datapoints"
                         ]
                     ]
                 ]

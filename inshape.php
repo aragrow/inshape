@@ -19,12 +19,20 @@ defined( 'INSHAPE_BASE_DIR' ) or define( 'INSHAPE_BASE_DIR', plugin_dir_path( __
 // Define a constant for the data directory. This separates the path logic from its use, and makes it more maintainable.
 defined( 'INSHAPE_DATA_DIR' ) or define( 'INSHAPE_DATA_DIR', INSHAPE_BASE_DIR . 'assets/sample-data/' );
 
+require_once plugin_dir_path(__FILE__) . 'includes/db.php';
 require_once plugin_dir_path(__FILE__) . 'includes/api-integration.php';
 require_once plugin_dir_path(__FILE__) . 'includes/custom-post-type.php';
 require_once plugin_dir_path(__FILE__) . 'includes/custom-post-fields.php';
 require_once plugin_dir_path(__FILE__) . 'includes/save-post.php';
+
 require_once plugin_dir_path(__FILE__) . 'includes/admin-ui.php';
+require_once plugin_dir_path(__FILE__) . 'includes/client-admin-ui.php';
+require_once plugin_dir_path(__FILE__) . 'includes/athlete-admin-ui.php';
+
 require_once plugin_dir_path(__FILE__) . 'includes/sample-data.php';
+
+require_once plugin_dir_path(__FILE__) . 'includes/client-CRUD.php';
+require_once plugin_dir_path(__FILE__) . 'includes/athlete-CRUD.php';
 
 /* The function enqueue_inshape_meta_box_styles() is used to enqueue a custom CSS file (styles.css) and make an 
 AJAX URL available to your JavaScript code. This is useful when you need to apply custom styling to the InShape 

@@ -48,10 +48,9 @@ class WP_InShape_Admin_UI {
             'InShape AI',
             'manage_options',
             'inshape_AI',
-            [$this, 'inshape_settings_page']
+            [$this, 'settings_page_callback']
         );
     }
-
 
     /*
     Purpose: Registers two settings for the plugin:
@@ -73,7 +72,7 @@ class WP_InShape_Admin_UI {
     submit_button(): Renders the "Save Changes" button.
     Form uses POST method and options.php action to handle settings submission.
     */
-    function inshape_settings_page() { ?>
+    function settings_page_callback() { ?>
         <div class="wrap">
         <h1>InShape AI Settings</h1>
             <form method="post" action="options.php">
@@ -194,6 +193,12 @@ class WP_InShape_Admin_UI {
         $table_html .= '</tbody></table>';
 
         return $table_html;
+    }
+
+    function client_and_athlete_admin_menu_callback() {
+
+        return;
+
     }
 
 }
